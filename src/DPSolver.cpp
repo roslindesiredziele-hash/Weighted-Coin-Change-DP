@@ -1,6 +1,7 @@
 #include "DPSolver.h"
 
 #include <climits>
+#include <algorithm>
 
 using namespace std;
 
