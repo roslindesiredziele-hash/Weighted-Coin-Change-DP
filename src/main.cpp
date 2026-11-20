@@ -15,24 +15,92 @@ double MeasureDP(int amount, const vector<Coin>& coins, int repetitions);
 
 int main()
 {
+    RunExample();
+
     vector<Coin> coins =
     {
         {1, 10},
         {2, 5},
-        {5, 2}
+        {5, 2},
+        {10, 4},
+        {20, 6},
+        {50, 10}
     };
 
-    int amount = 10;
+    ofstream outfile("./data/benchmark.csv");
 
-    int result =
-        MinWeight(amount, coins);
+    if (!outfile)
+    {
+        cerr
+            << "Unable to open benchmark.csv\n";
 
-    cout
-        << "Minimum weight for "
-        << amount
-        << " = "
-        << result
-        << endl;
+        return 1;
+    }
+
+    outfile
+        << "Amount,"
+        << "TimeMs\n";
+
+    vector<int> amounts =
+    {
+        10,
+        20,
+        30,
+        40,
+        50,
+        100,
+        200,
+        300,
+        400,
+        500,
+        1000,
+        2000,
+        5000,
+        10000,
+        20000,
+        50000,
+        100000
+    };
+
+    for (int amount : amounts)
+    {
+        int repetitions;
+
+        if (amount <= 1000)
+        {
+            repetitions = 1000;
+        }
+        else if (amount <= 10000)
+        {
+            repetitions = 200;
+        }
+        else
+        {
+            repetitions = 50;
+        }
+
+        double time = MeasureDP(amount, coins, repetitions);
+
+        cout
+            << "Amount: "
+            << amount
+            << " | Time: "
+            << time
+            << " ms"
+            << endl;
+
+        outfile
+            << amount
+            << ","
+            << time
+            << "\n";
+    }
+
+    outfile.close();
+
+    cout << "\nBenchmark completed.\n";
+
+    cout << "Results saved to " << "./data/benchmark.csv\n";
 
     return 0;
 }
