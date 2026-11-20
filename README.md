@@ -34,7 +34,7 @@ a target amount and a set of coin types:
 (denominationn, weightn)
 ```
 
-find a combination of coins whose total value equals:
+find a combination of coins whose total denomination equals:
 
 ```text
 A
@@ -45,7 +45,7 @@ while minimizing the total weight.
 Example:
 
 | Denomination | Weight |
-|-------------|---------:|
+|-------------:|--------:|
 | 1 | 10 |
 | 2 | 5 |
 | 5 | 2 |
@@ -110,7 +110,7 @@ to:
 A
 ```
 
-A DP table is used:
+A Dynamic Programming table is used:
 
 ```cpp
 dp[x]
@@ -272,7 +272,7 @@ This follows directly from the problem statement, which specifies the coin denom
 For example:
 
 | Denomination | Weight |
-|-------------|---------:|
+|-------------:|--------:|
 | 1 | 10 |
 | 2 | 5 |
 | 5 | 2 |
@@ -362,19 +362,140 @@ be the target amount and:
 n
 ```
 
-be the number of coin types.
+be the number of available coin denominations.
 
-Time Complexity:
+### Time Complexity
+
+The algorithm iterates through every amount from:
+
+```text
+0
+```
+
+to:
+
+```text
+A
+```
+
+For each amount, it examines every coin denomination:
+
+```cpp
+for (int current = 1; current <= amount; current++)
+{
+    for (const Coin& coin : coins)
+    {
+        ...
+    }
+}
+```
+
+The outer loop executes:
+
+```text
+A
+```
+
+times, while the inner loop executes:
+
+```text
+n
+```
+
+times for each amount.
+
+Therefore, the total running time is:
 
 ```text
 O(A · n)
 ```
 
-Space Complexity:
+### Space Complexity
+
+The algorithm stores a Dynamic Programming table:
+
+```cpp
+vector<int> dp(amount + 1);
+```
+
+containing one entry for every amount from:
+
+```text
+0
+```
+
+to:
+
+```text
+A
+```
+
+Therefore, the memory usage is:
 
 ```text
 O(A)
 ```
+
+---
+
+## Complexity Discussion
+
+The theoretical complexity of the algorithm is:
+
+```text
+Time:  O(A · n)
+Space: O(A)
+```
+
+where:
+
+```text
+A = target amount
+n = number of coin denominations
+```
+
+During the benchmark, however, the number of coin denominations was fixed:
+
+```cpp
+{
+    {1, 10},
+    {2, 5},
+    {5, 2},
+    {10, 4},
+    {20, 6},
+    {50, 10}
+}
+```
+
+which means:
+
+```text
+n = 6
+```
+
+remained constant throughout all experiments.
+
+As a result:
+
+```text
+O(A · n)
+=
+O(A · 6)
+=
+O(A)
+```
+
+for the benchmarked configuration.
+
+Consequently, the measured runtime grows approximately linearly with the target amount. This behavior is clearly visible in the experimental results:
+
+```text
+1000   -> 0.155 ms
+10000  -> 1.478 ms
+100000 -> 14.000 ms
+```
+
+Increasing the target amount by a factor of ten resulted in an approximately tenfold increase in execution time, closely matching the theoretical prediction.
 
 ---
 
@@ -420,7 +541,7 @@ Coin denominations used during benchmarking:
     {10, 4},
     {20, 6},
     {50, 10}
-}
+};
 ```
 
 Average execution times were recorded and exported to:
@@ -506,7 +627,7 @@ which is clearly visible in the benchmark results and logarithmic graph.
 
 ![Runtime Comparison](report/runtime_comparison.png)
 
-The runtime comparison graph shows a steady increase in execution time as the target amount grows. Since the Dynamic Programming table stores one state for every amount from:
+The runtime comparison graph shows a steady increase in execution time as the target amount grows. Since theble stores one state for every amount from:
 
 ```text
 0
@@ -524,7 +645,7 @@ larger target values require proportionally more work.
 
 ### Logarithmic Runtime Comparison
 
-![Logarithmic Runtime Comparison](report/runtime_logarithmic.png)
+report/runtime_logarithmic.png
 
 The logarithmic graph reveals an almost straight-line trend over several orders of magnitude, indicating near-linear growth.
 
@@ -591,6 +712,13 @@ Run:
 ./benchmark.exe
 ```
 
+The program:
+
+1. Solves the weighted coin change problem.
+2. Computes the minimum total weight.
+3. Benchmarks the Dynamic Programming algorithm.
+4. Exports benchmark results.
+
 Example output:
 
 ```text
@@ -600,13 +728,6 @@ Amount: 1000 | Time: 0.155 ms
 Amount: 10000 | Time: 1.478 ms
 Amount: 100000 | Time: 14.000 ms
 ```
-
-The program:
-
-1. Solves the weighted coin change problem.
-2. Computes the minimum total weight.
-3. Benchmarks the Dynamic Programming algorithm.
-4. Exports benchmark results.
 
 ---
 
@@ -663,7 +784,6 @@ weighted-coin-change-dp
 │   └── benchmark.csv
 │
 ├── report/
-|   |── graph.py
 │   ├── runtime_comparison.png
 │   └── runtime_logarithmic.png
 │
@@ -673,7 +793,7 @@ weighted-coin-change-dp
 │   ├── DPSolver.cpp
 │   └── main.cpp
 │
-|
+├── graph.py
 ├── README.md
 └── benchmark.exe
 ```
@@ -693,6 +813,42 @@ min(
     dp[x - coin.denomination] + coin.weight
 );
 ```
+
+Experimental evaluation confirmed the expected:
+
+```text
+O(A · n)
+```
+
+time complexity.
+
+Because the number of coin denominations remained constant throughout the benchmark, the measured runtime exhibited approximately linear growth with respect to the target amount. Increasing the amount from:
+
+```text
+1,000
+```
+
+to:
+
+```text
+10,000
+```
+
+and from:
+
+```text
+10,000
+```
+
+to:
+
+```text
+100,000
+```
+
+resulted in approximately tenfold increases in execution time, matching the theoretical prediction.
+
+The Dynamic Programming approach guarantees an optimal solution while remaining efficient even for large target amounts.
 
 ---
 
