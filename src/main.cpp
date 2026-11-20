@@ -12,6 +12,7 @@
 using namespace std;
 
 double MeasureDP(int amount, const vector<Coin>& coins, int repetitions);
+void RunExample();
 
 int main()
 {
