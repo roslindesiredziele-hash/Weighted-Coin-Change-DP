@@ -1,4 +1,4 @@
-# Overencumbered Inventory
+# Weighted Coin Change DP
 
 A C++ implementation of a Dynamic Programming solution to the weighted coin change problem. The project helps Geralt the Witcher collect a target amount of ancient elvish coins while minimizing the total weight carried.
 
@@ -28,10 +28,10 @@ A
 a target amount and a set of coin types:
 
 ```text
-(value1, weight1)
-(value2, weight2)
+(denomination1, weight1)
+(denomination2, weight2)
 ...
-(valuen, weightn)
+(denominationn, weightn)
 ```
 
 find a combination of coins whose total value equals:
@@ -44,8 +44,8 @@ while minimizing the total weight.
 
 Example:
 
-| Value | Weight |
-|---------|---------:|
+| Denomination | Weight |
+|-------------|---------:|
 | 1 | 10 |
 | 2 | 5 |
 | 5 | 2 |
@@ -89,7 +89,7 @@ Each coin is represented by:
 ```cpp
 struct Coin
 {
-    int value;
+    int denomination;
     int weight;
 };
 ```
@@ -178,8 +178,8 @@ x = 1 ... A
 and for every available coin:
 
 ```cpp
-value[i]
-weight[i]
+coin.denomination
+coin.weight
 ```
 
 the state is updated using:
@@ -188,20 +188,20 @@ the state is updated using:
 dp[x] =
 min(
     dp[x],
-    dp[x - value[i]] + weight[i]
+    dp[x - coin.denomination] + coin.weight
 );
 ```
 
 provided that:
 
 ```cpp
-x >= value[i]
+x >= coin.denomination
 ```
 
 and amount:
 
 ```cpp
-x - value[i]
+x - coin.denomination
 ```
 
 has already been computed.
@@ -217,7 +217,7 @@ dp[10]
 and there exists a coin:
 
 ```text
-value = 5
+denomination = 5
 weight = 2
 ```
 
@@ -241,7 +241,7 @@ has weight:
 2
 ```
 
-then adding another coin of value:
+then adding another coin of denomination:
 
 ```text
 5
@@ -271,8 +271,8 @@ This follows directly from the problem statement, which specifies the coin denom
 
 For example:
 
-| Value | Weight |
-|---------|---------:|
+| Denomination | Weight |
+|-------------|---------:|
 | 1 | 10 |
 | 2 | 5 |
 | 5 | 2 |
@@ -303,14 +303,14 @@ The recurrence:
 dp[x] =
 min(
     dp[x],
-    dp[x - value[i]] + weight[i]
+    dp[x - coin.denomination] + coin.weight
 );
 ```
 
 naturally allows this behavior because:
 
 ```cpp
-dp[x - value[i]]
+dp[x - coin.denomination]
 ```
 
 may already contain one or more copies of the same coin.
@@ -339,7 +339,7 @@ can always be expressed as:
 
 ```text
 Optimal solution for
-x - value[i]
+x - coin.denomination
 ```
 
 plus one final coin.
@@ -388,18 +388,39 @@ QueryPerformanceCounter()
 
 from the Windows API.
 
-Several target amounts were tested.
-
-Example benchmark sizes:
+Benchmark amounts:
 
 ```text
+10
+20
+30
+40
+50
 100
+200
+300
+400
 500
 1000
+2000
 5000
 10000
+20000
 50000
 100000
+```
+
+Coin denominations used during benchmarking:
+
+```cpp
+{
+    {1, 10},
+    {2, 5},
+    {5, 2},
+    {10, 4},
+    {20, 6},
+    {50, 10}
+}
 ```
 
 Average execution times were recorded and exported to:
@@ -430,21 +451,52 @@ with total weight:
 4
 ```
 
-The measured execution times increase approximately linearly with the target amount, which is consistent with the expected:
+### Benchmark Results
+
+| Target Amount | Time (ms) |
+|--------------:|----------:|
+| 10 | 0.00096 |
+| 20 | 0.00204 |
+| 50 | 0.00766 |
+| 100 | 0.01408 |
+| 500 | 0.07385 |
+| 1000 | 0.15538 |
+| 5000 | 0.68512 |
+| 10000 | 1.47776 |
+| 50000 | 6.97672 |
+| 100000 | 14.00030 |
+
+The benchmark demonstrates almost perfectly linear growth with respect to the target amount.
+
+Measured results:
+
+```text
+1000   -> 0.155 ms
+10000  -> 1.478 ms
+100000 -> 14.000 ms
+```
+
+Increasing the target amount by a factor of ten resulted in an approximately tenfold increase in execution time.
+
+Although the theoretical complexity is:
 
 ```text
 O(A · n)
 ```
 
-complexity.
+the number of coin denominations remained fixed during benchmarking:
 
-Since the number of coin types remains fixed during testing, the practical behavior approaches:
+```text
+n = 6
+```
+
+Therefore, the observed behavior approaches:
 
 ```text
 O(A)
 ```
 
-with respect to the target amount.
+which is clearly visible in the benchmark results and logarithmic graph.
 
 ---
 
@@ -452,23 +504,64 @@ with respect to the target amount.
 
 ### Runtime Comparison
 
+![Runtime Comparison](report/runtime_comparison.png)
+
+The runtime comparison graph shows a steady increase in execution time as the target amount grows. Since the Dynamic Programming table stores one state for every amount from:
+
 ```text
-report/runtime_comparison.png
+0
 ```
 
-Displays execution time as a function of the target amount.
+to:
 
-The graph shows the gradual increase in execution time as the DP table grows larger.
+```text
+A
+```
+
+larger target values require proportionally more work.
+
+---
 
 ### Logarithmic Runtime Comparison
 
+![Logarithmic Runtime Comparison](report/runtime_logarithmic.png)
+
+The logarithmic graph reveals an almost straight-line trend over several orders of magnitude, indicating near-linear growth.
+
+This behavior is consistent with the theoretical complexity:
+
 ```text
-report/runtime_logarithmic.png
+O(A · n)
 ```
 
-Uses logarithmic axes to visualize scaling behavior over large input sizes.
+where:
 
-The graph demonstrates stable growth consistent with the theoretical complexity of the algorithm.
+```text
+A = target amount
+n = number of coin denominations
+```
+
+Since the number of coin denominations remained constant during testing:
+
+```text
+n = 6
+```
+
+the observed runtime approaches:
+
+```text
+O(A)
+```
+
+The benchmark data supports this conclusion:
+
+```text
+1000   -> 0.155 ms
+10000  -> 1.478 ms
+100000 -> 14.000 ms
+```
+
+which closely matches linear growth.
 
 ---
 
@@ -502,13 +595,17 @@ Example output:
 
 ```text
 Minimum weight for 10 = 4
+
+Amount: 1000 | Time: 0.155 ms
+Amount: 10000 | Time: 1.478 ms
+Amount: 100000 | Time: 14.000 ms
 ```
 
 The program:
 
 1. Solves the weighted coin change problem.
 2. Computes the minimum total weight.
-3. Benchmarks the DP algorithm.
+3. Benchmarks the Dynamic Programming algorithm.
 4. Exports benchmark results.
 
 ---
@@ -525,10 +622,10 @@ Format:
 
 ```csv
 Amount,TimeMs
-100,...
-500,...
-1000,...
+10,0.00096
+20,0.00204
 ...
+100000,14.00030
 ```
 
 ---
@@ -560,7 +657,7 @@ report/
 ## Project Structure
 
 ```text
-overencumbered-inventory
+weighted-coin-change-dp
 │
 ├── data/
 │   └── benchmark.csv
@@ -582,11 +679,17 @@ overencumbered-inventory
 
 ---
 
-## Conclusion
+## Conclusionze the total weight of coins required to obtain a target amount.
 
-A Dynamic Programming solution was implemented to minimize the total weight of coins required to obtain a target amount.
+The algorithm exploits optimal substructure by storing the minimum-weight solution for every intermediate amount and reusing those results through the recurrence:
 
-The algorithm exploits optimal substructure by storing the minimum weight solution for every intermediate amount and reusing those results to construct larger solutions.
+```cpp
+dp[x] =
+min(
+    dp[x],
+    dp[x - coin.denomination] + coin.weight
+);
+```
 
 Experimental evaluation confirmed the expected:
 
@@ -596,7 +699,33 @@ O(A · n)
 
 time complexity.
 
-The approach guarantees an optimal solution and remains practical even for large target amounts.
+Because the number of coin denominations remained constant throughout the benchmark, the measured runtime exhibited approximately linear growth with respect to the target amount. Increasing the amount from:
+
+```text
+1,000
+```
+
+to:
+
+```text
+10,000
+```
+
+and from:
+
+```text
+10,000
+```
+
+to:
+
+```text
+100,000
+```
+
+resulted in approximately tenfold increases in execution time, matching the theoretical prediction.
+
+The Dynamic Programming approach guarantees an optimal solution while remaining efficient even for large target amounts.
 
 ---
 
