@@ -5,6 +5,6 @@
 
 #include <vector>
 
-
+int MinWeight(int amount, const std::vector<Coin>& coins);
 
 #endif
