@@ -11,6 +11,8 @@
 
 using namespace std;
 
+double MeasureDP(int amount, const vector<Coin>& coins, int repetitions);
+
 int main()
 {
     vector<Coin> coins =
@@ -33,4 +35,28 @@ int main()
         << endl;
 
     return 0;
+}
+
+double MeasureDP(int amount, const vector<Coin>& coins, int repetitions)
+{
+    LARGE_INTEGER start, end, frequency;
+
+    QueryPerformanceFrequency(&frequency);
+
+    double totalTime = 0.0;
+
+    for (int i = 0; i < repetitions; i++)
+    {
+        QueryPerformanceCounter(&start);
+
+        MinWeight(
+            amount,
+            coins);
+
+        QueryPerformanceCounter(&end);
+
+        totalTime += (end.QuadPart - start.QuadPart) * 1000.0 / frequency.QuadPart;
+    }
+
+    return totalTime / repetitions;
 }
