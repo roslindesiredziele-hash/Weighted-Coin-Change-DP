@@ -784,6 +784,7 @@ weighted-coin-change-dp
 │   └── benchmark.csv
 │
 ├── report/
+|   |── graph.py
 │   ├── runtime_comparison.png
 │   └── runtime_logarithmic.png
 │
@@ -793,7 +794,7 @@ weighted-coin-change-dp
 │   ├── DPSolver.cpp
 │   └── main.cpp
 │
-├── graph.py
+├
 ├── README.md
 └── benchmark.exe
 ```
