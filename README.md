@@ -663,11 +663,11 @@ weighted-coin-change-dp
 │   └── benchmark.csv
 │
 ├── report/
+|   |── graph.py
 │   ├── runtime_comparison.png
 │   └── runtime_logarithmic.png
 │
 ├── src/
-|   |── graph.py
 │   ├── Coin.h
 │   ├── DPSolver.h
 │   ├── DPSolver.cpp
