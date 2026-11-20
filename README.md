@@ -680,7 +680,9 @@ weighted-coin-change-dp
 
 ---
 
-## Conclusionze the total weight of coins required to obtain a target amount.
+## Conclusion
+
+A Dynamic Programming solution was implemented to solve the weighted coin change problem by minimizing the total weight of coins required to obtain a target amount.
 
 The algorithm exploits optimal substructure by storing the minimum-weight solution for every intermediate amount and reusing those results through the recurrence:
 
@@ -691,42 +693,6 @@ min(
     dp[x - coin.denomination] + coin.weight
 );
 ```
-
-Experimental evaluation confirmed the expected:
-
-```text
-O(A · n)
-```
-
-time complexity.
-
-Because the number of coin denominations remained constant throughout the benchmark, the measured runtime exhibited approximately linear growth with respect to the target amount. Increasing the amount from:
-
-```text
-1,000
-```
-
-to:
-
-```text
-10,000
-```
-
-and from:
-
-```text
-10,000
-```
-
-to:
-
-```text
-100,000
-```
-
-resulted in approximately tenfold increases in execution time, matching the theoretical prediction.
-
-The Dynamic Programming approach guarantees an optimal solution while remaining efficient even for large target amounts.
 
 ---
 
