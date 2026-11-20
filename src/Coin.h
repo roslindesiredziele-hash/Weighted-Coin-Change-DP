@@ -1,5 +1,5 @@
-#define Coin_H
-#ifndef Coin_H
+#ifndef COIN_H
+#define COIN_H
 
 struct Coin
 {
