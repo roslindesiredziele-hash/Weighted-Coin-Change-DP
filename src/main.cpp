@@ -60,3 +60,24 @@ double MeasureDP(int amount, const vector<Coin>& coins, int repetitions)
 
     return totalTime / repetitions;
 }
+
+void RunExample()
+{
+    vector<Coin> coins =
+    {
+        {1, 10},
+        {2, 5},
+        {5, 2}
+    };
+
+    int amount = 10;
+
+    int result = MinWeight(amount, coins);
+
+    cout
+        << "Minimum weight for "
+        << amount
+        << " = "
+        << result
+        << "\n\n";
+}
