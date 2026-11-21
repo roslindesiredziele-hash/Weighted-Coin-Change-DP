@@ -736,7 +736,7 @@ Amount: 100000 | Time: 14.000 ms
 Generated automatically:
 
 ```text
-data/benchmark.csv
+data/data.csv
 ```
 
 Format:
@@ -781,7 +781,7 @@ report/
 weighted-coin-change-dp
 │
 ├── data/
-│   └── benchmark.csv
+│   └── data.csv
 │
 ├── report/
 |   |── graph.py
