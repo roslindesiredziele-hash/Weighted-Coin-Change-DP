@@ -645,7 +645,7 @@ larger target values require proportionally more work.
 
 ### Logarithmic Runtime Comparison
 
-report/runtime_logarithmic.png
+![Logarithmic Runtime Comparison](report/runtime_logarithmic.png)
 
 The logarithmic graph reveals an almost straight-line trend over several orders of magnitude, indicating near-linear growth.
 
