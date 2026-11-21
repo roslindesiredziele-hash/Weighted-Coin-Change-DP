@@ -44,8 +44,6 @@ plt.savefig(
     dpi=300
 )
 
-plt.close()
-
 # -----------------------------
 # Logarithmic Runtime Comparison
 # -----------------------------
@@ -90,8 +88,8 @@ plt.savefig(
     dpi=300
 )
 
-plt.close()
-
 print("Generated:")
 print("  report/runtime_comparison.png")
 print("  report/runtime_logarithmic.png")
+
+plt.show()
